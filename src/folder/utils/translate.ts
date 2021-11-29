@@ -48,7 +48,6 @@ export const translate = async (
     const response = await axios.get(urlGet, { params });
 
     if (response.status === 200) {
-      console.log(response);
       // return getGoogleTranslateText(response.data);
       return response.data[0][0][0];
     }

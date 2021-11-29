@@ -26,6 +26,7 @@ export const translate = async (
   }
 
   try {
+    /*
     const response = await fetchAPI(
       `${GOOGLE_TRANSLATE_URL}?key=${googleTranslateApiKey}`,
       'POST',
@@ -39,9 +40,16 @@ export const translate = async (
         cancelToken: cancelToken.token,
       },
     );
+*/
+
+    // const urlGet = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+ sourceLanguage + '&tl=' + targetLanguage + '&dt=t&q=' + text;
+    const urlGet = 'https://translate.googleapis.com/translate_a/single';
+    const params = new URLSearchParams([['client', 'gtx'], ['sl', sourceLanguage], ['tl', targetLanguage], ['dt', 't'], ['q', text]]);
+    const response = await axios.get(urlGet, { params });
 
     if (response.status === 200) {
-      return getGoogleTranslateText(response.data);
+      // return getGoogleTranslateText(response.data);
+      return response.data[0][0][0];
     }
 
     return {
@@ -89,7 +97,7 @@ export function getTranslationItems(
     const item = items[index];
     const parsedFiles = getParsedFiles(folder, item.path);
 
-    const source = parsedFiles.find(it => it.language === payload.sourceLanguage);
+    const source = parsedFiles.find((it) => it.language === payload.sourceLanguage);
 
     // Get the first filled formatted path
     // This is because some indexes may not have the given path

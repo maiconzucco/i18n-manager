@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, CancelTokenSource, Method } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource, Method } from 'axios';
 import _ from 'lodash/fp';
 import { Commit } from 'vuex';
 
@@ -8,6 +8,7 @@ import { getFormattedPath, getParsedFiles } from './files';
 import { getLanguageLabel, getLanguagePath } from './language';
 
 const GOOGLE_TRANSLATE_URL = 'https://translation.googleapis.com/language/translate/v2';
+const GOOGLE_TRANSLATE_URL_SINGLE = 'https://translate.googleapis.com/translate_a/single';
 
 export const translate = async (
   text: string,
@@ -25,23 +26,34 @@ export const translate = async (
     return;
   }
 
+  let response: AxiosResponse;
+
   try {
-    const response = await fetchAPI(
-      `${GOOGLE_TRANSLATE_URL}?key=${googleTranslateApiKey}`,
-      'POST',
-      {
-        target: targetLanguage,
-        source: sourceLanguage,
-        q: text,
-        format: 'text',
-      },
-      {
-        cancelToken: cancelToken.token,
-      },
-    );
+    if (googleTranslateApiKey) {
+      response = await fetchAPI(
+        `${GOOGLE_TRANSLATE_URL}?key=${googleTranslateApiKey}`,
+        'POST',
+        {
+          target: targetLanguage,
+          source: sourceLanguage,
+          q: text,
+          format: 'text',
+        },
+        {
+          cancelToken: cancelToken.token,
+        },
+      );
+    } else {
+      const params = new URLSearchParams([['client', 'gtx'], ['sl', sourceLanguage], ['tl', targetLanguage], ['dt', 't'], ['q', text]]);
+      response = await axios.get(GOOGLE_TRANSLATE_URL_SINGLE, { params });
+    }
 
     if (response.status === 200) {
-      return getGoogleTranslateText(response.data);
+      if (googleTranslateApiKey) {
+        return getGoogleTranslateText(response.data);
+      } else {
+        return response.data[0][0][0];
+      }
     }
 
     return {
@@ -89,7 +101,7 @@ export function getTranslationItems(
     const item = items[index];
     const parsedFiles = getParsedFiles(folder, item.path);
 
-    const source = parsedFiles.find(it => it.language === payload.sourceLanguage);
+    const source = parsedFiles.find((it) => it.language === payload.sourceLanguage);
 
     // Get the first filled formatted path
     // This is because some indexes may not have the given path

@@ -18,8 +18,8 @@ if (process.platform === 'darwin') {
   app.setAboutPanelOptions({
     applicationName: 'i18n Manager',
     applicationVersion: app.getVersion(),
-    copyright: 'https://www.github.com/gilmarsquinelato',
-    credits: 'Gilmar Quinelato',
+    copyright: 'https://www.github.com/gilmarsquinelato / https://github.com/maiconzucco',
+    credits: 'Gilmar Quinelato / Maicon Zucco (improvements)',
     version: app.getVersion(),
   });
 }

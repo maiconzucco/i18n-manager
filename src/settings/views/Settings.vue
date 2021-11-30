@@ -21,6 +21,9 @@
             </v-col>
           </v-row>
           <div class="px-2">
+             Set null for use single requests.
+           </div>
+          <div class="px-2">
             <RemoteLink
               href="https://console.cloud.google.com/apis/credentials/wizard?api=translate.googleapis.com"
             />

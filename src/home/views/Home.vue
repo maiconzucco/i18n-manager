@@ -34,7 +34,7 @@
           </v-card-text>
           <v-card-actions>
             <span>Did you like this project? Please give a star</span>
-            <RemoteLink class="gh-star" href="https://github.com/gilmarsquinelato/i18n-manager">
+            <RemoteLink class="gh-star" href="http://github.com/maiconzucco/i18n-manager">
               <svg
                 viewBox="0 0 14 16"
                 class="octicon octicon-star"
@@ -48,6 +48,9 @@
               </svg>
               Star
             </RemoteLink>
+            &nbsp;
+            <span>Original version</span>
+            <RemoteLink class="gh-star" href="https://github.com/gilmarsquinelato/i18n-manager"></RemoteLink>
           </v-card-actions>
         </v-card>
       </v-col>
